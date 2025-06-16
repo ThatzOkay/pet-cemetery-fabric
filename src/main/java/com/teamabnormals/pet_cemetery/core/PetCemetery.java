@@ -1,5 +1,21 @@
 package com.teamabnormals.pet_cemetery.core;
 
+import com.tterrag.registrate.Registrate;
+import net.fabricmc.api.ModInitializer;
+
+public class PetCemetery implements ModInitializer {
+
+	public static final String MOD_ID = "pet_cemetery";
+	public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
+
+	@Override
+	public void onInitialize() {
+
+		REGISTRATE.register();
+	}
+}
+
+/*
 import com.teamabnormals.blueprint.core.util.registry.RegistryHelper;
 import com.teamabnormals.pet_cemetery.client.renderer.entity.UndeadCatRenderer;
 import com.teamabnormals.pet_cemetery.client.renderer.entity.UndeadParrotRenderer;
@@ -89,4 +105,4 @@ public class PetCemetery {
 			renderer.addLayer(new UndeadParrotOnShoulderLayer<>(renderer, event.getEntityModels()));
 		});
 	}
-}
+}*/

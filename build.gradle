@@ -1,107 +1,122 @@
-buildscript {
-    repositories {
-        maven { url = "https://files.minecraftforge.net/maven" }
-        maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
-    }
-    dependencies {
-        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
-        classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
-    }
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "maven-publish"
+    id 'fabric-loom' version '1.0-SNAPSHOT'
 }
 
-apply plugin: "net.minecraftforge.gradle"
-apply plugin: "eclipse"
-apply plugin: "maven-publish"
-apply plugin: "org.spongepowered.mixin"
-
-mixin {
-    add sourceSets.main, "${project.modId}.refmap.json"
+base {
+    archivesName = project.modName
 }
 
-version = "${project.minecraft}-${project.modVersion}"
-group = "com.teamabnormals"
-archivesBaseName = project.modId
+version = project.modVersion
+group = project.mavenGroup
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+loom {
+    accessWidenerPath = file("src/main/resources/${project.modId}.accesswidener")
 
-minecraft {
-    mappings channel: "official", version: project.minecraft
-    accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
-    runs {
-        client {
-            workingDirectory project.file("run")
-            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
-            property "forge.logging.console.level", "debug"
-            property "mixin.env.remapRefMap", "true"
-            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config=" + project.modId + ".mixins.json"
-            mods {
-                pet_cemetery {
-                    source sourceSets.main
-                }
-            }
-        }
-        server {
-            workingDirectory project.file("run")
-            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
-            property "forge.logging.console.level", "debug"
-            property "mixin.env.remapRefMap", "true"
-            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config=" + project.modId + ".mixins.json"
-            mods {
-                pet_cemetery {
-                    source sourceSets.main
-                }
-            }
-        }
-        data {
-            workingDirectory project.file("run")
-            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
-            property "forge.logging.console.level", "debug"
-            property "mixin.env.remapRefMap", "true"
-            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
-            args "--mod", project.modId, "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources")
-            mods {
-                pet_cemetery {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-sourceSets.main.resources {
-    srcDir "src/generated/resources"
-}
-
-dependencies {
-    minecraft "net.minecraftforge:forge:${project.minecraft}-${project.forge}"
-    implementation fg.deobf("com.teamabnormals:blueprint:${project.minecraft}-${project.blueprint}")
-
-    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft}-common-api:${project.jei}")
-    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge-api:${project.jei}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge:${project.jei}")
-
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 
 repositories {
-    maven { url "https://maven.jaackson.me" }
-    maven { url "https://dvs1.progwml6.com/files/maven/" }
-    maven { url "https://modmaven.k-4u.nl" }
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
+    maven {
+        name = "Fuzs Mod Resources"
+        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+    }
+    maven { url "https://maven.terraformersmc.com/releases/" }
+    maven { url = "https://mvn.devos.one/snapshots/" }
+    maven { url ="https://repo1.maven.org/maven2/"}
+    maven { url = "https://jitpack.io/" }
+    maven {
+        name 'Xander Maven'
+        url 'https://maven.isxander.dev/releases'
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
+configurations {
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+}
+
+dependencies {
+        mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
+    } 
+
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.6")))
+    modImplementation(include("com.tterrag.registrate_fabric:Registrate:${project.registrate_version}"))
+            {exclude group: "com.github.llamalad7.mixinextras" }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+    it.options.release = 17
+}
+
+processResources {
+    inputs.property "mod_id", modId
+    inputs.property "mod_version", modVersion
+    inputs.property "mod_name", modName
+    inputs.property "mod_description", modName
+    inputs.property "archives_base_name", modName
+
+    inputs.property "minecraft_version", minecraft_version
+
+
+    filesMatching("fabric.mod.json") {
+        expand "mod_version": modVersion,
+                "mod_id": modId,
+                "mod_name": modName,
+                "mod_description": modName,
+                "archives_base_name": modName,
+
+                "minecraft_version": minecraft_version
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    withSourcesJar()
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    inputFile.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier = null
 }
 
 jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : project.modName,
-                "Specification-Vendor"    : "Team Abnormals",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.modName,
-                "Implementation-Version"  : project.modVersion,
-                "Implementation-Vendor"   : "Team Abnormals",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : project.modId + ".mixins.json"
-        ])
+    from('LICENSE') {
+        rename { "${it}_${base.archivesName.get()}" }
+    }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
     }
 }

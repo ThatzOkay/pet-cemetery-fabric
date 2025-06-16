@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "${modId}",
+  "version": "${modVersion}",
+  "name": "${modName}",
+  "description": "${modName}",
+  "icon": "${modId}.icon.png",
+  "authors": [""],
+
+  "entrypoints": {
+    "main": [
+      "com.teamabnormals.pet_cemetery.core.PetCemetery"
+    ],
+    "client": [
+      "com.teamabnormals.pet_cemetery.core.PetCemeteryClient"
+    ]
+  },
+  "depends": {
+    "fabric": "*"
+  },
+  "mixins": ["pet_cemetery.mixins.json"],
+  "license": "GPL-3.0-only"
+}

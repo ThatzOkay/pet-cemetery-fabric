@@ -15,10 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class UndeadParrotOnShoulderLayer<T extends Player> extends RenderLayer<T, PlayerModel<T>> {
 	private final ParrotModel parrotModel;
 

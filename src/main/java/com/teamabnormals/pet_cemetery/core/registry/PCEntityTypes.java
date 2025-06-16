@@ -1,16 +1,10 @@
 package com.teamabnormals.pet_cemetery.core.registry;
 
-import com.teamabnormals.blueprint.core.util.registry.EntitySubRegistryHelper;
 import com.teamabnormals.pet_cemetery.common.entity.*;
 import com.teamabnormals.pet_cemetery.core.PetCemetery;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.registries.RegistryObject;
 
-@EventBusSubscriber(modid = PetCemetery.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class PCEntityTypes {
 	public static final EntitySubRegistryHelper HELPER = PetCemetery.REGISTRY_HELPER.getEntitySubHelper();
 
