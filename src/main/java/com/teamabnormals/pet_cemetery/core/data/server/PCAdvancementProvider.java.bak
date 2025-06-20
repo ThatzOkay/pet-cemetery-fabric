@@ -6,6 +6,7 @@ import com.teamabnormals.pet_cemetery.core.PetCemetery;
 import com.teamabnormals.pet_cemetery.core.other.PCUtil;
 import com.teamabnormals.pet_cemetery.core.other.tags.PCEntityTypeTags;
 import com.teamabnormals.pet_cemetery.core.registry.PCItems;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -26,8 +27,8 @@ import java.util.function.Consumer;
 
 public class PCAdvancementProvider implements AdvancementGenerator {
 
-	public static ForgeAdvancementProvider create(PackOutput output, CompletableFuture<Provider> provider, ExistingFileHelper helper) {
-		return new ForgeAdvancementProvider(output, provider, helper, List.of(new PCAdvancementProvider()));
+	public static FabricAdvancementProvider create(PackOutput output, CompletableFuture<Provider> provider, ExistingFileHelper helper) {
+		return new FabricAdvancementProvider(output, provider, helper, List.of(new PCAdvancementProvider()));
 	}
 
 	@Override

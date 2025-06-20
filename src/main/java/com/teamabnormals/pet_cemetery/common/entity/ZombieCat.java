@@ -1,6 +1,5 @@
 package com.teamabnormals.pet_cemetery.common.entity;
 
-import com.teamabnormals.pet_cemetery.core.other.PCCriteriaTriggers;
 import com.teamabnormals.pet_cemetery.core.other.PCUtil;
 import com.teamabnormals.pet_cemetery.core.registry.PCEntityTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -25,9 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -102,9 +98,9 @@ public class ZombieCat extends Cat {
 		if (!this.level().isClientSide && this.isAlive() && this.isConverting()) {
 			int i = PCUtil.getConversionProgress(this);
 			this.conversionTime -= i;
-			if (this.conversionTime <= 0 && ForgeEventFactory.canLivingConvert(this, EntityType.CAT, (timer) -> this.conversionTime = timer)) {
-				this.cureZombie((ServerLevel) this.level());
-			}
+//			if (this.conversionTime <= 0 && ForgeEventFactory.canLivingConvert(this, EntityType.CAT, (timer) -> this.conversionTime = timer)) {
+//				this.cureZombie((ServerLevel) this.level());
+//			}
 		}
 
 		super.tick();
@@ -145,7 +141,6 @@ public class ZombieCat extends Cat {
 		this.level().broadcastEntityEvent(this, (byte) 16);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void handleEntityEvent(byte id) {
 		if (id == 16) {
@@ -166,7 +161,7 @@ public class ZombieCat extends Cat {
 		if (this.conversionStarter != null) {
 			Player player = level.getPlayerByUUID(this.conversionStarter);
 			if (player instanceof ServerPlayer serverPlayer) {
-				PCCriteriaTriggers.CURED_ZOMBIE_PET.trigger(serverPlayer, this, cat);
+				//PCCriteriaTriggers.CURED_ZOMBIE_PET.trigger(serverPlayer, this, cat);
 			}
 		}
 
@@ -175,7 +170,7 @@ public class ZombieCat extends Cat {
 			level.levelEvent(null, 1027, this.blockPosition(), 0);
 		}
 
-		ForgeEventFactory.onLivingConvert(this, cat);
+		//ForgeEventFactory.onLivingConvert(this, cat);
 	}
 
 	public Cat copyEntityData() {

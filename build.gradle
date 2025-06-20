@@ -1,18 +1,18 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "maven-publish"
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version "${loom_version}"
 }
 
 base {
-    archivesName = project.modName
+    archivesName = project.mod_name
 }
 
-version = project.modVersion
-group = project.mavenGroup
+version = project.mod_version
+group = project.maven_group
 
 loom {
-    accessWidenerPath = file("src/main/resources/${project.modId}.accesswidener")
+    accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
 
 }
 
@@ -49,14 +49,12 @@ configurations {
 }
 
 dependencies {
-        mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
-    } 
-
+    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.3.6")))
@@ -71,21 +69,21 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    inputs.property "mod_id", modId
-    inputs.property "mod_version", modVersion
-    inputs.property "mod_name", modName
-    inputs.property "mod_description", modName
-    inputs.property "archives_base_name", modName
+    inputs.property "mod_id", mod_id
+    inputs.property "mod_version", mod_version
+    inputs.property "mod_name", mod_name
+    inputs.property "mod_description", mod_name
+    inputs.property "archives_base_name", mod_name
 
     inputs.property "minecraft_version", minecraft_version
 
 
     filesMatching("fabric.mod.json") {
-        expand "mod_version": modVersion,
-                "mod_id": modId,
-                "mod_name": modName,
-                "mod_description": modName,
-                "archives_base_name": modName,
+        expand "mod_version": mod_version,
+                "mod_id": mod_id,
+                "mod_name": mod_name,
+                "mod_description": mod_name,
+                "archives_base_name": mod_name,
 
                 "minecraft_version": minecraft_version
     }

@@ -2,11 +2,14 @@ package com.teamabnormals.pet_cemetery.client.renderer.entity;
 
 import com.teamabnormals.pet_cemetery.common.entity.ZombieCat;
 import com.teamabnormals.pet_cemetery.core.PetCemetery;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.CatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Cat;
 
+@Environment(EnvType.CLIENT)
 public class UndeadCatRenderer extends CatRenderer {
 	private static final ResourceLocation ZOMBIE_CAT_TEXTURE = new ResourceLocation(PetCemetery.MOD_ID, "textures/entity/cat/zombie_cat.png");
 	private static final ResourceLocation SKELETON_CAT_TEXTURE = new ResourceLocation(PetCemetery.MOD_ID, "textures/entity/cat/skeleton_cat.png");

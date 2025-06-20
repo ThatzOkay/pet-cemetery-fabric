@@ -3,9 +3,13 @@ package com.teamabnormals.pet_cemetery.common.item;
 import com.teamabnormals.pet_cemetery.core.PetCemetery;
 import com.teamabnormals.pet_cemetery.core.other.PCUtil;
 import com.teamabnormals.pet_cemetery.core.registry.PCEntityTypes;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.ParrotRenderer;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -16,9 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.annotation.Nullable;
@@ -31,12 +32,12 @@ public class PetCollarItem extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains(PCUtil.PET_ID)) {
 			String petID = tag.getString(PCUtil.PET_ID);
-			EntityType<?> pet = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(petID));
+			EntityType<?> pet = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(petID));
 
 			Component petType = Component.translatable(pet.getDescriptionId()).withStyle(ChatFormatting.GRAY);
 			if (tag.contains(PCUtil.PET_VARIANT)) {

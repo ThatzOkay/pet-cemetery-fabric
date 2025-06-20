@@ -1,5 +1,7 @@
 package com.teamabnormals.pet_cemetery.core;
 
+import com.teamabnormals.pet_cemetery.core.registry.PCEntityTypes;
+import com.teamabnormals.pet_cemetery.core.registry.PCItems;
 import com.tterrag.registrate.Registrate;
 import net.fabricmc.api.ModInitializer;
 
@@ -10,6 +12,9 @@ public class PetCemetery implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+
+		new PCEntityTypes();
+		new PCItems();
 
 		REGISTRATE.register();
 	}

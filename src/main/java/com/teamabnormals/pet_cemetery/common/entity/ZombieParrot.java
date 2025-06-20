@@ -1,6 +1,5 @@
 package com.teamabnormals.pet_cemetery.common.entity;
 
-import com.teamabnormals.pet_cemetery.core.other.PCCriteriaTriggers;
 import com.teamabnormals.pet_cemetery.core.other.PCUtil;
 import com.teamabnormals.pet_cemetery.core.registry.PCEntityTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -25,10 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
-
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -97,9 +92,9 @@ public class ZombieParrot extends Parrot {
 		if (!this.level().isClientSide && this.isAlive() && this.isConverting()) {
 			int i = PCUtil.getConversionProgress(this);
 			this.conversionTime -= i;
-			if (this.conversionTime <= 0 && ForgeEventFactory.canLivingConvert(this, EntityType.PARROT, (timer) -> this.conversionTime = timer)) {
-				this.cureZombie((ServerLevel) this.level());
-			}
+//			if (this.conversionTime <= 0 && ForgeEventFactory.canLivingConvert(this, EntityType.PARROT, (timer) -> this.conversionTime = timer)) {
+//				this.cureZombie((ServerLevel) this.level());
+//			}
 		}
 
 		super.tick();
@@ -138,7 +133,6 @@ public class ZombieParrot extends Parrot {
 		this.level().broadcastEntityEvent(this, (byte) 16);
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void handleEntityEvent(byte id) {
 		if (id == 16) {
@@ -159,7 +153,7 @@ public class ZombieParrot extends Parrot {
 		if (this.conversionStarter != null) {
 			Player player = this.level().getPlayerByUUID(this.conversionStarter);
 			if (player instanceof ServerPlayer serverPlayer) {
-				PCCriteriaTriggers.CURED_ZOMBIE_PET.trigger(serverPlayer, this, parrot);
+				//PCCriteriaTriggers.CURED_ZOMBIE_PET.trigger(serverPlayer, this, parrot);
 			}
 		}
 
@@ -168,7 +162,7 @@ public class ZombieParrot extends Parrot {
 			level.levelEvent(null, 1027, this.blockPosition(), 0);
 		}
 
-		ForgeEventFactory.onLivingConvert(this, parrot);
+		//ForgeEventFactory.onLivingConvert(this, parrot);
 	}
 
 	public Parrot copyEntityData() {
